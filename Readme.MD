@@ -1,0 +1,139 @@
+# Consulta CEP com Jquery
+
+![imagem](https://i.imgur.com/FgMcEEz.jpg)
+
+#### Consumindo WebService da ViaCEP
+
+O site da [ViaCEP](https://viacep.com.br/) disponibilizam a consulta em varios formatos, e nesse exemplo iremos utilizar o formato JSON, o retorno dessa consulta será como esse ex:
+
+```json
+  {
+      "cep": "01001-000",
+      "logradouro": "Praça da Sé",
+      "complemento": "lado ímpar",
+      "bairro": "Sé",
+      "localidade": "São Paulo",
+      "uf": "SP",
+      "ibge": "3550308",
+      "gia": "1004",
+      "ddd": "11",
+      "siafi": "7107"
+    }
+```
+
+Nesse exemplo utilizaremos dois arquivos:
+um index.html já com os CDN's do Boostrap e outro arquivo javaScript que irá conter as requisições e o chamaremos de main.js.
+
+arquivo main.js:
+
+```javascript
+function consultaCep() {
+    $(".barra-progresso").show();
+    let meuCep = document.getElementById("cep").value;
+    let url = "https://viacep.com.br/ws/" + meuCep + "/json/";
+
+    $.ajax({
+        url: url,
+        type: "GET",
+        success: function (response) {
+            console.log(response);
+
+            $("#localidade").html(response.localidade);
+            $("#bairro").html(response.bairro);
+            $("#uf").html(response.uf);
+            $("#logradouro").html(response.logradouro);
+
+            $("#titulo_cep").html("CEP " + response.cep);
+
+            $(".cep").show();
+            $(".barra-progresso").hide();
+        }
+
+    })
+}
+
+$(function () {
+    $(".cep").hide();
+    $(".barra-progresso").hide();
+})
+```
+no arquivo index.html:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--Bootstrap 4.6 CSS cdn -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <!--Jquery cdn-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!--Bootstrap 4.6 JS cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+        crossorigin="anonymous"></script>
+    <!--Script locol com o Jquery -->
+    <script src="main.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand">Consuta CEP</a>
+        <div action="" class="form-inline my2 my-lg-0">
+            <input type="search" class="form-control mr-sm-2" placeholder="CEP" id="cep" required pattern= "\d{5}-?\d{3}" maxlength="9">
+            <button class="btn btn-outline-success my-2 my-sm-0" onclick="consultaCep()">Buscar</button>
+        </div>
+    </nav>
+    <div class="container barra-progresso">
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75"
+                aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+        </div>
+    </div>
+    <div class="container cep">
+        <br>
+        <div class="row">
+            <br>
+            <h3 id="titulo_cep">CEP</h3>
+        </div>
+        <br>
+        <div class="row">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>Logradouro:</td>
+                        <td id="logradouro"></td>
+                    </tr>
+                    <tr>
+                        <td>Bairro:</td>
+                        <td id="bairro"></td>
+                    </tr>
+                    <tr>
+                        <td>Localidade:</td>
+                        <td id="localidade"></td>
+                    </tr>
+                    <tr>
+                        <td>UF:</td>
+                        <td id="uf"></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
+```
+
+Fonte(s): [ViaCEP](https://viacep.com.br/)
+
+end.
