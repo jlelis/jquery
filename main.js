@@ -1,33 +1,50 @@
 
 function consultaCep() {
 
-    let meuCep = document.getElementById("cep").value;
+    const meuCep = document.getElementById("cep").value;
+    if (meuCep.length > 8) {
+        alert(meuCep);
 
-    $(".barra-progresso").show();
-    let url = "https://viacep.com.br/ws/" + meuCep + "/json/";
+        $(".barra-progresso").show();
+        const url = "https://viacep.com.br/ws/" + meuCep + "/json/";
 
-    $.ajax({
-        url: url,
-        type: "GET",
-        success: function (response) {
-            console.log(response);
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "json",
+            success: function (response) {   
 
-            $("#localidade").html(response.localidade);
-            $("#bairro").html(response.bairro);
-            $("#uf").html(response.uf);
-            $("#logradouro").html(response.logradouro);
+                 
 
-            $("#titulo_cep").html("CEP " + response.cep);
+                if (response.erro!== undefined) {
 
-            $(".cep").show();
-            $(".barra-progresso").hide();
-        }
+                    alert("CEP inválido ou não encontrado");
+                    $(".barra-progresso").hide();
+                    $(".cep").show();
+                }else{
+                    $("#localidade").html(response.localidade);
+                    $("#bairro").html(response.bairro);
+                    $("#uf").html(response.uf);
+                    $("#logradouro").html(response.logradouro);
 
-    })
+                    $("#titulo_cep").html("CEP " + response.cep);
+
+                    $(".cep").show();
+                    $(".barra-progresso").hide();
+                }
+            }
+
+        });
+    }
+    else {
+        alert("Formato de CEP inválido.");
+
+    }
 
 }
 
 $(function () {
+    $("#cep").mask("99999-999");
     $(".cep").hide();
     $(".barra-progresso").hide();
 })
